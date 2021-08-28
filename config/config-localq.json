@@ -1,0 +1,53 @@
+{
+  "Exchanges": [
+    {
+      "ExchangeName": "PRODUCT_ADD",
+      "Publishers": [
+        "API_GATEWAY_SERVICE"
+      ],
+      "Method": "POST",
+      "Subscribers": [
+        {
+          "Service": "PRODUCT_SERVICE",
+          "Function": "InsertPRODUCT",
+          "OnSuccessExchangesToPush": [
+            "PRODUCT_ADDED"
+          ],
+          "OnFailureExchangesToPush": [
+            "ERROR_RECEIVER"
+          ],
+          "QueueName": "PRODUCT_ADD-PRODUCT_SERVICE"
+        }
+      ]
+    },
+    {
+      "ExchangeName": "PRODUCT_ADDED",
+      "Publishers": [
+        "PRODUCT_SERVICE"
+      ],
+      "Method": "UNKNOWN",
+      "Subscribers": [
+        {
+          "Service": "PRODUCT_SERVICE",
+          "Function": "SendSTUDENTAddedNotificationToAdmin",
+          "OnSuccessExchangesToPush": [
+            "NOTIFICATION_ADDED"
+          ],
+          "OnFailureExchangesToPush": [
+            "ERROR_RECEIVER"
+          ],
+          "QueueName": "PRODUCT_ADDED-PRODUCT_SERVICE"
+        },
+        {
+          "Service": "API_GATEWAY_SERVICE",
+          "Function": "FunctionNameToAcknowledgeUIHandle",
+          "OnSuccessExchangesToPush": [],
+          "OnFailureExchangesToPush": [
+            "ERROR_RECEIVER"
+          ],
+          "QueueName": "PRODUCT_ADDED-API_GATEWAY_SERVICE"
+        }
+      ]
+    }
+  ]
+}
